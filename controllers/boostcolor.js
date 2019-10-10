@@ -1,5 +1,8 @@
+const axios = require('axios')
 const Boost = require('../models/boostcolor')
 const { Storage } = require('@google-cloud/storage')
+const azure = 'https://japaneast.api.cognitive.microsoft.com/vision/v2.1/analyze?visualFeatures=Categories,Description,Color&details=&language=en'
+const azure_key = process.env.AZURE_TOKEN
 
 const storage = new Storage({
     projectId: process.env.GOOGLE_CLOUD_PROJECT_ID,
@@ -29,12 +32,30 @@ class BoostController {
             photo = req.file.cloudStoragePublicUrl
         }
 
-        Boost.create({
-            caption,
-            tags,
-            userId: req.decode.id,
-            photo
+        axios({
+            method: 'post',
+            url: azure,
+            headers: {
+                "Ocp-Apim-Subscription-Key": azure_key
+            },
+            data: {
+                "url": photo
+            }
         })
+            .then(({ data }) => {
+                let tags = []
+                let caption = data.description.captions[0].text
+                data.description.tags.forEach(tag => {
+                    tags.push(tag)
+                })
+                
+                return Boost.create({
+                    caption,
+                    tags: tags.slice(0, 5),
+                    userId: req.decode.id,
+                    photo
+                })
+            })
             .then(file => {
                 res.status(201).json(file)
             })
