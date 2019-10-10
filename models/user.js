@@ -1,18 +1,15 @@
 const { Schema, model } = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
-const {hashPassword} = require('../helpers/bcrypt')
+const { hashPassword } = require('../helpers/bcrypt')
 
 const userSchema = new Schema({
-  username: {
+  name: {
     type: String,
-    required: [true, "Username must be filled"],
-    min: [5, "Your username needs to be at least 5 letters"],
-    unique: [true, "This username is already registered"]
+    required: [true, "Username must be filled"]
   },
   password: {
     type: String,
-    required: [true, "Password must be filled"],
-    min: [5, "Your password needs to be at least 5 letters"]
+    required: [true, "Password must be filled"]
   },
   email: {
     type: String,
@@ -29,13 +26,13 @@ const userSchema = new Schema({
   }
 })
 
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function (next) {
   this.password = hashPassword(this.password)
   next()
 })
 
 userSchema.plugin(uniqueValidator)
 
-const User  = model('User', userSchema)
+const User = model('User', userSchema)
 
 module.exports = User
