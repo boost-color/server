@@ -60,7 +60,6 @@ const multer = Multer({
         fileSize: 5 * 1024 * 1024
     },
     fileFilter: function (req, file, next) {
-        console.log(`masukkk<<<<<<<<<<<<`)
         if (!file.mimetype.includes("image")) {
             next({
                 status: 400,
