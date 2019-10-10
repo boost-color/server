@@ -3,8 +3,18 @@ const { generateToken } = require('../helpers/jwt')
 const { checkPassword } = require('../helpers/bcrypt')
 
 class userController {
+    static findById(req, res, next) {
+        const id = req.params.id
+        User.findById(id).populate('fileId')
+            .then(user => {
+                res.status(200).json(user)
+            })
+            .catch(next)
+    }
+
     static register(req, res, next) {
         const { name, email, password } = req.body
+        console.log({ name, email, password })
         User.create({ name, email, password })
             .then(user => {
                 res.status(201).json(user)

@@ -1,7 +1,7 @@
 const request = require('request');
 
-let subscriptionKey = process.env.AZURE_KEY;
-let endpoint = process.env.AZURE_ENDPOINT
+let subscriptionKey = process.env.AZURE_KEY || '3242dfb4da12495b951382639cda2eee';
+let endpoint = process.env.AZURE_ENDPOINT || 'https://japaneast.api.cognitive.microsoft.com/ '
 if (!subscriptionKey) { throw new Error('Set your environment variables for your subscription key and endpoint.'); }
 
 var uriBase = endpoint + 'vision/v2.1/analyze';
