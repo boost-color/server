@@ -5,7 +5,7 @@ const { hashPassword } = require('../helpers/bcrypt')
 const userSchema = new Schema({
   name: {
     type: String,
-    required: [true, "Username must be filled"]
+    required: [true, "Name must be filled"]
   },
   password: {
     type: String,
@@ -14,7 +14,6 @@ const userSchema = new Schema({
   email: {
     type: String,
     required: [true, "Email must be filled"],
-    unique: [true, "This email is already registered"],
     validate: [
       {
         validator: function (value) {
@@ -23,15 +22,17 @@ const userSchema = new Schema({
         message: 'Invalid email format'
       }
     ]
-  }
+  },
+  file: [{
+    type: Schema.Types.ObjectId,
+    ref: 'FileUpload'
+  }]
 })
 
 userSchema.pre('save', function (next) {
   this.password = hashPassword(this.password)
   next()
 })
-
-userSchema.plugin(uniqueValidator)
 
 const User = model('User', userSchema)
 
