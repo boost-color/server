@@ -31,6 +31,7 @@ class BoostController {
         let colorize = null
         let photo = null
         if (req.file) {
+            console.log(`masuuuukkkkkkkkkk`)
             photo = req.file.cloudStoragePublicUrl
         }
         deepai.setApiKey(deepai_key);
@@ -38,7 +39,7 @@ class BoostController {
             image: photo
         })
             .then(response => {
-                colorize =response.output_url
+                colorize = response.output_url
                 return axios({
                     method: 'post',
                     url: azure,
@@ -49,7 +50,7 @@ class BoostController {
                         "url": response.output_url
                     }
                 })
-            }).then(({data})=>{
+            }).then(({ data }) => {
                 let tags = []
                 let caption = data.description.captions[0].text
                 data.description.tags.forEach(tag => {
@@ -59,11 +60,12 @@ class BoostController {
                     caption,
                     tags: tags.slice(0, 5),
                     userId: req.decode.id,
-                    photo : colorize
+                    photo: colorize
                 })
             })
             .then(file => {
-                res.status(201).json(file)
+                // res.status(201).json(file)
+                console.log(file)
             })
             .catch(next)
     }
