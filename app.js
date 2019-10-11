@@ -19,6 +19,9 @@ app.use(cors())
 app.use(morgan('dev'))
 
 // main route
+app.get('/', (req, res) => {
+  res.send('Deploy Server Succesfully')
+})
 app.use('/', routes)
 
 // middleware error handler
